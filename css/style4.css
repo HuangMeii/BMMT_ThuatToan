@@ -353,7 +353,8 @@
 }
 
 #m101{
-  margin-left: 650px;
+  margin-left: 0;
+  width: 1000px;
 }
 
 .form-control{

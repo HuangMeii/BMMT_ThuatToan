@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thuật toán AES</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Thuật toán AES (Advanced Encryption Standard)</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Nguyên lý</h2>
+            <p>AES là thuật toán mã hóa đối xứng, sử dụng một khóa bí mật có độ dài 128-bit, 192-bit hoặc 256-bit.</p>
+            <p>Dữ liệu được chia thành các khối 128-bit và trải qua nhiều vòng biến đổi để tăng độ an toàn.</p>
+        </section>
+        <section>
+            <h2>Các bước chính</h2>
+            <ul>
+                <li><strong>SubBytes:</strong> Thay thế từng byte bằng giá trị trong bảng S-box.</li>
+                <li><strong>ShiftRows:</strong> Dịch chuyển các hàng trong ma trận dữ liệu.</li>
+                <li><strong>MixColumns:</strong> Biến đổi dữ liệu bằng phép nhân ma trận.</li>
+                <li><strong>AddRoundKey:</strong> XOR dữ liệu với khóa con.</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Ứng dụng</h2>
+            <p>AES được sử dụng rộng rãi trong bảo mật WiFi (WPA2), HTTPS, và mã hóa tập tin.</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Bảo mật dữ liệu</p>
+    </footer>
+</body>
+</html>

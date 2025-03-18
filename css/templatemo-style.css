@@ -43,6 +43,7 @@ p {
 }
 
 .cb-slideshow-text-container {
+    width: 200%;
     height: 100vh;
     display: flex;
     align-items: center;

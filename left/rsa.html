@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thuật toán RSA</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Thuật toán RSA (Rivest-Shamir-Adleman)</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Nguyên lý</h2>
+            <p>RSA là thuật toán mã hóa bất đối xứng (khóa công khai) dựa trên độ khó của phân tích số nguyên tố.</p>
+            <p>Sử dụng hai khóa:</p>
+            <ul>
+                <li>Khóa công khai <strong>(e, n)</strong> dùng để mã hóa.</li>
+                <li>Khóa bí mật <strong>(d, n)</strong> dùng để giải mã.</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Cách tạo khóa</h2>
+            <ol>
+                <li>Chọn hai số nguyên tố lớn <em>p</em>, <em>q</em>.</li>
+                <li>Tính <strong>n = p × q</strong>.</li>
+                <li>Tính hàm Euler <strong>φ(n) = (p - 1) × (q - 1)</strong>.</li>
+                <li>Chọn số <em>e</em> sao cho <strong>1 &lt; e &lt; φ(n)</strong> và GCD(e, φ(n)) = 1.</li>
+                <li>Tính <em>d</em> sao cho <strong>(d × e) ≡ 1 mod φ(n)</strong> (nghịch đảo modular).</li>
+                <li>Khóa công khai: <strong>(e, n)</strong>, Khóa bí mật: <strong>(d, n)</strong>.</li>
+            </ol>
+        </section>
+        <section>
+            <h2>Mã hóa & Giải mã</h2>
+            <ul>
+                <li>Mã hóa: <strong>C = M<sup>e</sup> mod n</strong></li>
+                <li>Giải mã: <strong>M = C<sup>d</sup> mod n</strong></li>
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Thuật toán RSA</p>
+    </footer>
+</body>
+</html>

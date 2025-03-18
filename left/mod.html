@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thuật toán Lũy thừa nhanh (Modular Exponentiation)</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Thuật toán Lũy thừa nhanh (A<sup>k</sup> mod N)</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Nguyên lý</h2>
+            <p>Thuật toán lũy thừa nhanh giúp tính <strong>A<sup>k</sup> mod N</strong> một cách hiệu quả mà không cần thực hiện phép nhân trực tiếp, giúp tránh số quá lớn.</p>
+        </section>
+        <section>
+            <h2>Thuật toán Lũy thừa nhị phân</h2>
+            <p>Sử dụng phương pháp <strong>Exponentiation by Squaring</strong>:</p>
+            <ul>
+                <li><strong>Nếu k chẵn:</strong> A<sup>k</sup> mod N = (A<sup>k/2</sup> × A<sup>k/2</sup>) mod N</li>
+                <li><strong>Nếu k lẻ:</strong> A<sup>k</sup> mod N = (A × A<sup>(k-1)/2</sup> × A<sup>(k-1)/2</sup>) mod N</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Ứng dụng</h2>
+            <ul>
+                <li>Thuật toán RSA (mã hóa, giải mã).</li>
+                <li>Hệ thống Diffie-Hellman (trao đổi khóa).</li>
+                <li>Chữ ký số và bảo mật dữ liệu.</li>
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Thuật toán Mật mã</p>
+    </footer>
+</body>
+</html>
