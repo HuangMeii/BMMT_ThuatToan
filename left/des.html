@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thuật toán DES</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Thuật toán DES (Data Encryption Standard)</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Giới thiệu</h2>
+            <p>DES (Data Encryption Standard) là một thuật toán mã hóa khối được phát triển vào những năm 1970 bởi IBM và sau đó được Cơ quan An ninh Quốc gia Hoa Kỳ (NSA) chuẩn hóa.</p>
+        </section>
+        <section>
+            <h2>Nguyên lý hoạt động</h2>
+            <p>DES hoạt động trên các khối dữ liệu 64 bit và sử dụng khóa 56 bit. Thuật toán thực hiện 16 vòng biến đổi dữ liệu bằng các phép thế và hoán vị.</p>
+        </section>
+        <section>
+            <h2>Quá trình mã hóa</h2>
+            <ul>
+                <li>Ban đầu, dữ liệu được hoán vị bằng Bảng Hoán Vị Ban Đầu (IP).</li>
+                <li>Dữ liệu sau đó được chia thành hai nửa: trái (L) và phải (R).</li>
+                <li>16 vòng lặp mã hóa với các khóa con được tạo từ khóa chính.</li>
+                <li>Kết quả cuối cùng được hoán vị ngược (Inverse IP) để tạo bản mã.</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Ứng dụng</h2>
+            <p>DES từng được sử dụng rộng rãi trong lĩnh vực bảo mật thông tin, nhưng ngày nay đã bị thay thế bởi AES do khả năng bảo mật cao hơn.</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Thuật toán Mã hóa</p>
+    </footer>
+</body>
+</html>

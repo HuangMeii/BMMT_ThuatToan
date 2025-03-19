@@ -36,7 +36,7 @@
 				<div class="row cb-slideshow-text-container">
 					<div class= "tm-content col-xl-6 col-sm-8 col-xs-8 ml-auto section" id="m101">
             <div class="left">
-              <iframe src="left/tong.html" id="noidung" frameborder="0"></iframe>
+              <iframe src="left/mod.html" id="noidung" frameborder="0"></iframe>
             </div>
 
             <div class="right">
@@ -146,6 +146,20 @@
         });
     
         startAutoSwitching(intervalTime);
+        function updateIframe() {
+    iframe.classList.add("fade-out"); // Kích hoạt hiệu ứng mờ
+
+    setTimeout(() => {
+        iframe.src = pages[currentIndex]; // Đổi nội dung sau khi hiệu ứng mờ hoàn tất
+        currentIndex = (currentIndex + 1) % pages.length;
+    }, 500); // Chờ 0.5 giây trước khi thay đổi nội dung
+
+    setTimeout(() => {
+        iframe.classList.remove("fade-out");
+        iframe.classList.add("fade-in"); // Hiển thị lại sau khi nội dung đã đổi
+    }, 1000); // Chờ thêm để nội dung mới tải xong trước khi hiển thị
+}
+
     </script>
     
 	</body>
