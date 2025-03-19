@@ -1,12 +1,12 @@
 .left{
   float: left;
-  width: 35%;
-
+  width: 40%;
+  padding: 60px;
 }
 
 .right{
   float: right;
-  width: 65%;
+  width: 60%;
 }
 
 #noidung {
@@ -27,4 +27,11 @@
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
 }

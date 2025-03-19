@@ -41,20 +41,20 @@
 
             <div class="right">
                   <header class="mb-5"><h1>NHÓM 7</h1></header>
-                  <P class="mb-5">Tất cả các thuật toán được viết từ các thành viên của nhóm và tổng hợp lại. Cảm ơn vì đã ghé thăm!</P>
-                  
-                  <form action="#" method="get" class="subscribe-form">
+                  <P class="mb-5">Tất cả các thuật toán được viết từ các thành viên của nhóm và tổng hợp lại. </P>
+                  <p style="margin-bottom: 40px; margin-right: 40px;">Nếu bạn có bất kỳ thắc mắc hoặc góp ý nào, hãy gửi phản hồi đến nhóm mình để giúp hoàn thiện sản phẩm tốt hơn. Cảm ơn vì đã ghé thăm!</p>
+                  <form id="feedbackForm">
                     <div class="row form-section">
-      
-                      <div class="col-md-7 col-sm-7 col-xs-7">
-                                    <input name="email" type="text" class="form-control" id="contact_email" placeholder="Your Email..." required/>
+                        <div class="col-md-7 col-sm-7 col-xs-7">
+                            <textarea name="message" class="form-control" id="contact_message" placeholder="Nhập ý kiến của bạn..." required></textarea>
                         </div>
-                      <div class="col-md-5 col-sm-5 col-xs-5">
-                        <button type="submit" class="tm-btn-subscribe">Subscribe</button>
-                      </div>
-                    
+                        <div class="col-md-5 col-sm-5 col-xs-5">
+                            <button type="submit" class="tm-btn-subscribe">Gửi</button>
+                        </div>
                     </div>
-                            </form>
+                </form>
+                
+                
                             
                   <div class="tm-social-icons-container text-xs-center">
                     <div class="m100p">
@@ -137,7 +137,7 @@
                     iframe.classList.remove("fade-out");
                     iframe.classList.add("fade-in");
                 }, 800);
-                startAutoSwitching(20000); // Khi hover, dừng 20s
+                startAutoSwitching(40000); // Khi hover, dừng 20s
             });
     
             icon.addEventListener("mouseleave", function () {
@@ -158,6 +158,47 @@
         iframe.classList.remove("fade-out");
         iframe.classList.add("fade-in"); // Hiển thị lại sau khi nội dung đã đổi
     }, 1000); // Chờ thêm để nội dung mới tải xong trước khi hiển thị
+}
+
+
+
+
+document.getElementById("feedbackForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Ngăn trang tải lại
+
+    let message = document.getElementById("contact_message").value.trim();
+    if (message === "") {
+        alert("Vui lòng nhập nội dung trước khi gửi!");
+        return;
+    }
+
+    let url = "https://docs.google.com/spreadsheets/d/1Pqq4HkE1OFqJ4dfjDn3TMlWCSoPabO-iA1knbizbxOM/edit?gid=0#gid=0"; // Thay bằng URL Web App của bạn
+    let formData = new FormData();
+    formData.append("message", message);
+
+    fetch(url, { method: "POST", body: formData })
+    .then(response => response.text())
+    .then(data => {
+        alert("Ý kiến của bạn đã được gửi!");
+        document.getElementById("contact_message").value = ""; // Xóa nội dung sau khi gửi
+    })
+    .catch(error => console.error("Lỗi:", error));
+});
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Feedback");
+  var data = e.parameter;
+  var timestamp = new Date();
+
+  sheet.appendRow([timestamp, data.message]);
+
+  var response = ContentService.createTextOutput("Success")
+      .setMimeType(ContentService.MimeType.JSON);
+  
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  response.setHeader("Access-Control-Allow-Methods", "POST");
+  response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  
+  return response;
 }
 
     </script>
