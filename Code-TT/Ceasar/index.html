@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        input, button { margin: 10px; padding: 5px; }
+        textarea { width: 300px; height: 100px; }
+    </style>
+</head>
+<body>
+    <h2>Caesar Cipher</h2>
+    <label for="text">Nhập văn bản:</label>
+    <textarea id="text"></textarea><br>
+    <label for="shift">Dịch chuyển:</label>
+    <input type="number" id="shift" min="1" max="25" value="3"><br>
+    <button onclick="encryptText()">Mã hóa</button>
+    <button onclick="decryptText()">Giải mã</button>
+    
+    <h3>Kết quả mã hóa:</h3>
+    <textarea id="encryptedText" readonly></textarea>
+    
+    <h3>Kết quả giải mã:</h3>
+    <textarea id="decryptedText" readonly></textarea>
+
+    <script>
+        function encryptText() {
+            let text = document.getElementById("text").value;
+            let shift = parseInt(document.getElementById("shift").value);
+            let encrypted = caesarCipher(text, shift);
+            document.getElementById("encryptedText").value = encrypted;
+        }
+
+        function decryptText() {
+            let encryptedText = document.getElementById("encryptedText").value;
+            let shift = parseInt(document.getElementById("shift").value);
+            let decrypted = caesarCipher(encryptedText, 26 - shift);
+            document.getElementById("decryptedText").value = decrypted;
+        }
+
+        function caesarCipher(text, shift) {
+            return text.split('').map(char => {
+                if (char.match(/[a-z]/i)) {
+                    let code = char.charCodeAt(0);
+                    let offset = char >= 'A' && char <= 'Z' ? 65 : 97;
+                    return String.fromCharCode(((code - offset + shift) % 26) + offset);
+                }
+                return char;
+            }).join('');
+        }
+    </script>
+</body>
+</html>
