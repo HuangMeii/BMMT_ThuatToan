@@ -8,8 +8,80 @@
     <link rel="stylesheet" href="bang.html">
 </head>
 <body>
-  <div id="bang-content"></div>
+  
+  <div class="container">
+    <h1>Hill Cipher - Mật mã Ma trận</h1>
+    <p>Một hệ mã hóa cổ điển sử dụng đại số tuyến tính trong mật mã học</p>
+    
+    <div id="theory" class="tab-content active">
+        <div class="theory-section">
+            <h2>1. Giới thiệu về Hill Cipher</h2>
+            <p>Hill Cipher là một hệ mật mã thay thế đa biểu (polygraphic substitution cipher) được phát minh bởi Lester S. Hill năm 1929. Đây là một trong những hệ mật mã đầu tiên sử dụng đại số tuyến tính (ma trận) trong mã hóa.</p>
+            
+            <div class="definition">
+                <h3>Định nghĩa Hill Cipher</h3>
+                <p>Hill Cipher là hệ mật mã khóa đối xứng sử dụng ma trận khóa vuông <span class="math">K</span> để mã hóa và ma trận nghịch đảo <span class="math">K⁻¹</span> để giải mã. Mỗi ký tự được ánh xạ thành số (A=0, B=1,..., Z=25), và các ký tự được xử lý theo từng khối (block) có độ dài bằng kích thước ma trận khóa.</p>
+            </div>
+            
+            <h2>2. Nguyên lý hoạt động</h2>
+            <h3>Mã hóa</h3>
+            <p>Cho ma trận khóa <span class="math">K</span> kích thước <span class="math">n×n</span> và vector văn bản rõ <span class="math">P</span> (gồm <span class="math">n</span> ký tự):</p>
+            <p class="math">C = K × P mod 26</p>
+            <p>Trong đó <span class="math">C</span> là vector bản mã kết quả.</p>
+            
+            <h3>Giải mã</h3>
+            <p>Sử dụng ma trận nghịch đảo <span class="math">K⁻¹</span> (modulo 26):</p>
+            <p class="math">P = K⁻¹ × C mod 26</p>
+            
+            <div class="definition">
+                <h3>Điều kiện ma trận khóa</h3>
+                <p>Ma trận khóa <span class="math">K</span> phải thỏa mãn:</p>
+                <ol>
+                    <li>Là ma trận vuông</li>
+                    <li>Có định thức <span class="math">det(K) ≠ 0</span></li>
+                    <li><span class="math">gcd(det(K), 26) = 1</span> (định thức và 26 nguyên tố cùng nhau)</li>
+                </ol>
+            </div>
+            
+            <div class="example">
+                <h3>Ví dụ minh họa</h3>
+                <p>Cho ma trận khóa 2×2:</p>
+                <p class="math">K = [ 3 3 ]
+    [ 2 5 ]</p>
+                <p>Văn bản rõ: "HELP" → "HE LP"</p>
+                <p>Mã hóa "HE" (H=7, E=4):</p>
+                <p class="math">[ 3 3 ] [ 7 ] = [ 3×7 + 3×4 ] = [ 33 mod 26 ] = [ 7 ] → "H"
+    [ 2 5 ] [ 4 ]   [ 2×7 + 5×4 ]   [ 34 mod 26 ]   [ 8 ] → "I"</p>
+                <p>Kết quả: "HE" → "HI"</p>
+            </div>
+            
+            <h2>3. Ưu điểm và Nhược điểm</h2>
+            <table>
+                <tr>
+                    <th>Ưu điểm</th>
+                    <th>Nhược điểm</th>
+                </tr>
+                <tr>
+                    <td>
+                        <ul>
+                            <li>Mạnh hơn các mật mã thay thế đơn giản</li>
+                            <li>Khó bị phá bằng phương pháp phân tích tần suất</li>
+                            <li>Có thể thay đổi khóa dễ dàng bằng cách thay ma trận</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Dễ bị tấn công nếu biết một cặp bản rõ/bản mã đủ dài</li>
+                            <li>Yêu cầu ma trận khả nghịch modulo 26</li>
+                            <li>Không tự động xử lý các ký tự không phải chữ cái</li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+            <div id="bang-content"></div>
+        </div>
 
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

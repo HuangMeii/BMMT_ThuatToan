@@ -143,3 +143,4 @@ fetch('bang.html')
                 document.getElementById('bang-content').innerHTML = data;
             })
             .catch(error => console.error('Lỗi khi tải bang.html:', error));
+            

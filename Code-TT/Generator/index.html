@@ -5,11 +5,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tìm phần tử sinh trong Z*p</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="bang.html">
 </head>
 <body>
-  
-  <div id="bang-content"></div>
+  <div class="container">
+    <h1>Phần Tử Sinh trong Nhóm Nhân Z*p</h1>
+    <p>Tìm và kiểm tra các phần tử sinh của nhóm nhân modulo p</p>
+    
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('theory')">Lý Thuyết</div>
+        <div class="tab" onclick="switchTab('practice')">Thực Hành</div>
+    </div>
+    
+    <div id="theory" class="tab-content active">
+        <div class="theory-section">
+            <h2>1. Giới thiệu về Phần Tử Sinh</h2>
+            <p>Phần tử sinh (primitive root) của nhóm nhân Z*p là phần tử có bậc bằng ϕ(p) = p-1 (khi p là số nguyên tố). Các lũy thừa của phần tử sinh sẽ sinh ra toàn bộ nhóm Z*p.</p>
+            
+            <div class="definition">
+                <h3>Định nghĩa Nhóm Nhân Z*p</h3>
+                <p>Cho p là một số nguyên tố. Nhóm nhân Z*p được định nghĩa là tập hợp các số nguyên không chia hết cho p với phép toán nhân modulo p:</p>
+                <p class="math">Z*p = {1, 2, ..., p-1}</p>
+                <p>Đây là một nhóm hữu hạn có bậc p-1 (ϕ(p) = p-1 khi p nguyên tố).</p>
+            </div>
+            
+            <div class="definition">
+                <h3>Định nghĩa Phần Tử Sinh</h3>
+                <p>Một phần tử g ∈ Z*p được gọi là phần tử sinh nếu bậc của g bằng ϕ(p) = p-1:</p>
+                <p class="math">Ord(g) = p-1</p>
+                <p>Điều này có nghĩa các lũy thừa của g sẽ sinh ra toàn bộ nhóm Z*p:</p>
+                <p class="math">{g¹ mod p, g² mod p, ..., g^(p-1) mod p} = Z*p</p>
+            </div>
+            
+            <div class="theorem">
+                <h3>Định lý về Sự Tồn Tại Phần Tử Sinh</h3>
+                <p>Nhóm nhân Z*p là nhóm cyclic khi và chỉ khi p là số nguyên tố hoặc p=2,4 hoặc p=qⁿ hay 2qⁿ với q là số nguyên tố lẻ.</p>
+                <p>Đặc biệt, với p là số nguyên tố, Z*p luôn là nhóm cyclic và có đúng ϕ(p-1) phần tử sinh.</p>
+            </div>
+            
+            <div class="example">
+                <h3>Ví dụ minh họa</h3>
+                <p>Xét p=7. Ta có Z*7 = {1,2,3,4,5,6} với ϕ(7)=6.</p>
+                <p>Các phần tử sinh của Z*7:</p>
+                <ul>
+                    <li>Ord(3)=6 vì 3¹=3, 3²=2, 3³=6, 3⁴=4, 3⁵=5, 3⁶=1 mod 7</li>
+                    <li>Tương tự, Ord(5)=6</li>
+                </ul>
+                <p>Vậy tập phần tử sinh của Z*7 là {3,5} (ϕ(6)=2 phần tử).</p>
+            </div>
+            
+            <h2>2. Thuật toán tìm phần tử sinh</h2>
+            <ol>
+                <li>Phân tích p-1 thành các thừa số nguyên tố: p-1 = q₁^e₁ × q₂^e₂ × ... × qₖ^eₖ</li>
+                <li>Với mỗi a ∈ Z*p, kiểm tra a^((p-1)/qᵢ) ≢ 1 mod p với mọi qᵢ</li>
+                <li>Nếu a thỏa mãn điều kiện trên thì a là phần tử sinh</li>
+            </ol>
+            
+            <h2>3. Ứng Dụng của Phần Tử Sinh</h2>
+            <table>
+                <tr>
+                    <th>Lĩnh vực</th>
+                    <th>Ứng dụng</th>
+                </tr>
+                <tr>
+                    <td>Mật mã học</td>
+                    <td>Cơ sở cho hệ mật Diffie-Hellman, ElGamal, DSA</td>
+                </tr>
+                <tr>
+                    <td>Lý thuyết số</td>
+                    <td>Nghiên cứu cấu trúc nhóm cyclic, logarit rời rạc</td>
+                </tr>
+                <tr>
+                    <td>Thuật toán</td>
+                    <td>Kiểm tra nguyên tố, tạo số ngẫu nhiên</td>
+                </tr>
+                <tr>
+                    <td>Mã hóa</td>
+                    <td>Xây dựng các hệ thống mã hóa công khai</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <div id="practice" class="tab-content">
+        <h2>Công Cụ Tìm Phần Tử Sinh</h2>
+        
+        <div class="input-group">
+            <label for="inputP">Nhập số nguyên tố p (2 ≤ p ≤ 1000):</label>
+            <input type="number" id="inputP" min="2" max="1000" placeholder="Ví dụ: 7, 13, 17">
+        </div>
+        
+        <div class="button-group">
+            <button onclick="calculate()">Tìm Phần Tử Sinh</button>
+            <button onclick="clearAll()">Xóa tất cả</button>
+            <button onclick="showExample()">Ví dụ mẫu</button>
+        </div>
+        
+        <div class="result">
+            <h3>Kết quả:</h3>
+            <div id="resultText"></div>
+            
+            <table id="resultTable">
+                <thead>
+                    <tr>
+                        <th>a ∈ Z*p</th>
+                        <th>Bậc Ord(a)</th>
+                        <th>Kiểm tra phần tử sinh</th>
+                        <th>Các lũy thừa của a</th>
+                    </tr>
+                </thead>
+                <tbody id="resultBody"></tbody>
+            </table>
+            
+            <div id="status"></div>
+        </div>
+        
+        <div class="instructions">
+            <h3>Hướng dẫn sử dụng:</h3>
+            <ol>
+                <li>Nhập một số nguyên tố p (2 ≤ p ≤ 1000)</li>
+                <li>Nhấn "Tìm Phần Tử Sinh" để liệt kê tất cả phần tử và kiểm tra phần tử sinh</li>
+                <li>Kết quả sẽ hiển thị bảng các phần tử trong Z*p với bậc và kiểm tra phần tử sinh</li>
+                <li>Phần tử sinh sẽ được đánh dấu màu xanh lá</li>
+                <li>Nhấn "Ví dụ mẫu" để xem ví dụ minh họa</li>
+            </ol>
+            <p><strong>Lưu ý:</strong> Với p nguyên tố, nhóm Z*p luôn có ϕ(p-1) phần tử sinh.</p>
+        </div>
+    </div>
+</div>
+
 
     <script src="script.js"></script>
 </body>
