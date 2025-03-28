@@ -1,0 +1,20 @@
+<div class="container">
+  <h2>Mã hóa & Giải mã Hill Cipher</h2>
+  <label>Khóa (kích thước n x n, số ký tự phải là bình phương của số nguyên):</label>
+  <input type="text" id="key" placeholder="VD: DCBAEFGH">
+  
+  <label>Văn bản:</label>
+  <input type="text" id="plaintext" placeholder="Nhập văn bản">
+
+  <button onclick="encryptText()">Mã hóa</button>
+  <button onclick="decryptText()">Giải mã</button>
+
+  <h3>Kết quả:</h3>
+  <p id="result"></p>
+
+  <h3>Bước thực hiện:</h3>
+  <div id="steps"></div>
+  
+  <!-- Thêm phần hiển thị ma trận -->
+  <div id="matrixInfo"></div>
+</div>
