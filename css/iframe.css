@@ -36,6 +36,8 @@ body {
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
+    overflow: hidden !important; /* Ngăn cuộn trang */
+    
 }
 
 #content-section {
@@ -119,4 +121,15 @@ body {
 .m100p > div {
     text-align: center;
     margin-bottom: 15px;
+}
+
+/* css lại ô input màn hình chính */
+#contact_username{
+  margin: 0;
+}
+
+#contact_message{
+  margin-top: 70px;
+  margin-left: -379px;
+  margin-bottom: 30px;
 }

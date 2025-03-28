@@ -134,42 +134,12 @@ const algorithmContents = [
 <section>
 <h2>Ứng dụng</h2>
 <p>AES được sử dụng rộng rãi trong bảo mật WiFi (WPA2), HTTPS, và mã hóa tập tin.</p>
-<button style="margin-top:10px;" onclick="window.open('Code-TT/AES/index.html', '_blank')">Xem chi tiết</button>
+<button style="margin-top:10px;" onclick="window.open('Code-TT/Ceasar/index.html', '_blank')">Xem chi tiết</button>
 </section>
 </main>
         `,
     },
-    {
-        title: 'Thuật toán DES (Data Encryption Standard)',
-        content: `
-<main>
-<section>
-<h2>Giới thiệu</h2>
-<p>DES (Data Encryption Standard) là thuật toán <strong><em>mã hóa khối đối xứng</em></strong>, mã hóa dữ liệu <strong><em>theo từng khối 64 bit</em></strong>.</p>
-<p>Được IBM phát triển và NSA chuẩn hóa vào những năm 1970, DES từng là tiêu chuẩn bảo mật quan trọng.</p>
-</section>
-<section>
-<h2>Nguyên lý</h2>
-<p>DES dùng khóa 56 bit, thực hiện <strong><em>16 vòng biến đổi</em></strong> với phép thế và hoán vị.</p>
-</section>
-<section>
-<h2>Mã hóa</h2>
-<ul>
-    <li>Hoán vị ban đầu (IP).</li>
-    <li>Chia dữ liệu thành hai nửa (L, R).</li>
-    <li>16 vòng mã hóa với khóa con.</li>
-    <li>Hoán vị ngược (Inverse IP).</li>
-</ul>
-</section>
-<section>
-<h2>Ứng dụng</h2>
-<p>Từng phổ biến nhưng nay được thay thế bởi AES do bảo mật tốt hơn.</p>
-<button style="margin-top:10px;" onclick="window.open('Code-TT/DES/index.html', '_blank')">Xem chi tiết</button>
-</section>
-</main>
 
-        `,
-    },
     {
         title: 'Thuật toán RSA (Rivest-Shamir-Adleman)',
         content: `
@@ -297,21 +267,37 @@ document
         event.preventDefault();
 
         let message = document.getElementById('contact_message').value.trim();
+        let username = document.getElementById('contact_username').value.trim();
         if (message === '') {
             alert('Vui lòng nhập nội dung trước khi gửi!');
             return;
         }
 
         let url =
-            'https://docs.google.com/spreadsheets/d/1Pqq4HkE1OFqJ4dfjDn3TMlWCSoPabO-iA1knbizbxOM/edit?gid=0#gid=0'; // Thay bằng URL Web App thực tế
-        let formData = new FormData();
-        formData.append('message', message);
+            'https://67e66af66530dbd3110fe369.mockapi.io/hmmmm/huangmei';  
 
-        fetch(url, { method: 'POST', body: formData })
-            .then((response) => response.text())
+        fetch(url, { 
+          method: 'POST',
+          headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            // Chuyển đổi dữ liệu thành JSON
+            // body: JSON.stringify({ message: message })
+            // Chuyển đổi dữ liệu thành FormData
+          body: JSON.stringify({ 
+            Username: username,
+            Message: message }) 
+          })
+            .then((response) => response.json())
             .then((data) => {
                 alert('Ý kiến của bạn đã được gửi!');
                 document.getElementById('contact_message').value = '';
+                document.getElementById('contact_username').value = '';
+                console.log(data);
             })
-            .catch((error) => console.error('Lỗi:', error));
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Đã xảy ra lỗi khi gửi ý kiến của bạn!');
+            });
     });
