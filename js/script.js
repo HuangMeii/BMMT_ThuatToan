@@ -1,6 +1,6 @@
 const algorithmContents = [
   {
-      title: 'Thuật toán Lũy thừa nhanh (<strong><em>a<sup>k</sup> mod n</em></strong>)',
+      title: 'Thuật toán Lũy thừa nhanh <br>(<strong><em>a<sup>k</sup> mod n</em></strong>)',
       content: `
           <main>
 <section>
