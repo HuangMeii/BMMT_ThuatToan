@@ -125,11 +125,35 @@ body {
 
 /* css lại ô input màn hình chính */
 #contact_username{
-  margin: 0;
+  margin-bottom: 20px;
+}
+
+#contact_username:focus{
+  background-color: rgba(66, 65, 65, 0.34);
+  color: azure;
+}
+
+#contact_message:focus{
+  background-color: rgba(66, 65, 65, 0.34);
+  color: azure;
 }
 
 #contact_message{
-  margin-top: 70px;
+  margin-top: 86px;
   margin-left: -379px;
   margin-bottom: 30px;
 }
+
+.io{
+  width: 190px;
+  margin-left: 600px;
+  margin-top: -345px;
+  border-radius: 3%;
+  box-shadow: 0 0 13px rgba(80, 151, 237, 0.224);
+  transition: all 0.5s ease;
+}
+
+.io:hover{
+  box-shadow: 0 0 23px rgba(144, 190, 246, 0.345);
+}
+

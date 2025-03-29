@@ -3,85 +3,564 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hill Cipher</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="bang.html">
+    <title>Hill Cipher - Lý Thuyết và Ứng Dụng</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        .theory-section {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #3498db;
+        }
+        .definition {
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .example {
+            background-color: #fef9e7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #f39c12;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        .button-group {
+            margin: 25px 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #e8f4fc;
+            border-radius: 4px;
+        }
+        .matrix {
+            margin: 15px 0;
+            font-family: monospace;
+            white-space: pre;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .instructions {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 30px;
+            border-left: 4px solid #3498db;
+        }
+        .error {
+            color: #e74c3c;
+            font-weight: bold;
+            background-color: #fdecea;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            color: #27ae60;
+            font-weight: bold;
+            background-color: #e8f8f0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .math {
+            font-family: "Times New Roman", serif;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #eee;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .process-steps {
+            margin-top: 20px;
+        }
+        .process-step {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
-  
-  <div class="container">
-    <h1>Hill Cipher - Mật mã Ma trận</h1>
-    <p>Một hệ mã hóa cổ điển sử dụng đại số tuyến tính trong mật mã học</p>
-    
-    <div id="theory" class="tab-content active">
-        <div class="theory-section">
-            <h2>1. Giới thiệu về Hill Cipher</h2>
-            <p>Hill Cipher là một hệ mật mã thay thế đa biểu (polygraphic substitution cipher) được phát minh bởi Lester S. Hill năm 1929. Đây là một trong những hệ mật mã đầu tiên sử dụng đại số tuyến tính (ma trận) trong mã hóa.</p>
-            
-            <div class="definition">
-                <h3>Định nghĩa Hill Cipher</h3>
-                <p>Hill Cipher là hệ mật mã khóa đối xứng sử dụng ma trận khóa vuông <span class="math">K</span> để mã hóa và ma trận nghịch đảo <span class="math">K⁻¹</span> để giải mã. Mỗi ký tự được ánh xạ thành số (A=0, B=1,..., Z=25), và các ký tự được xử lý theo từng khối (block) có độ dài bằng kích thước ma trận khóa.</p>
-            </div>
-            
-            <h2>2. Nguyên lý hoạt động</h2>
-            <h3>Mã hóa</h3>
-            <p>Cho ma trận khóa <span class="math">K</span> kích thước <span class="math">n×n</span> và vector văn bản rõ <span class="math">P</span> (gồm <span class="math">n</span> ký tự):</p>
-            <p class="math">C = K × P mod 26</p>
-            <p>Trong đó <span class="math">C</span> là vector bản mã kết quả.</p>
-            
-            <h3>Giải mã</h3>
-            <p>Sử dụng ma trận nghịch đảo <span class="math">K⁻¹</span> (modulo 26):</p>
-            <p class="math">P = K⁻¹ × C mod 26</p>
-            
-            <div class="definition">
-                <h3>Điều kiện ma trận khóa</h3>
-                <p>Ma trận khóa <span class="math">K</span> phải thỏa mãn:</p>
-                <ol>
-                    <li>Là ma trận vuông</li>
-                    <li>Có định thức <span class="math">det(K) ≠ 0</span></li>
-                    <li><span class="math">gcd(det(K), 26) = 1</span> (định thức và 26 nguyên tố cùng nhau)</li>
-                </ol>
-            </div>
-            
-            <div class="example">
-                <h3>Ví dụ minh họa</h3>
-                <p>Cho ma trận khóa 2×2:</p>
-                <p class="math">K = [ 3 3 ]
-    [ 2 5 ]</p>
-                <p>Văn bản rõ: "HELP" → "HE LP"</p>
-                <p>Mã hóa "HE" (H=7, E=4):</p>
-                <p class="math">[ 3 3 ] [ 7 ] = [ 3×7 + 3×4 ] = [ 33 mod 26 ] = [ 7 ] → "H"
-    [ 2 5 ] [ 4 ]   [ 2×7 + 5×4 ]   [ 34 mod 26 ]   [ 8 ] → "I"</p>
-                <p>Kết quả: "HE" → "HI"</p>
-            </div>
-            
-            <h2>3. Ưu điểm và Nhược điểm</h2>
-            <table>
-                <tr>
-                    <th>Ưu điểm</th>
-                    <th>Nhược điểm</th>
-                </tr>
-                <tr>
-                    <td>
-                        <ul>
-                            <li>Mạnh hơn các mật mã thay thế đơn giản</li>
-                            <li>Khó bị phá bằng phương pháp phân tích tần suất</li>
-                            <li>Có thể thay đổi khóa dễ dàng bằng cách thay ma trận</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>Dễ bị tấn công nếu biết một cặp bản rõ/bản mã đủ dài</li>
-                            <li>Yêu cầu ma trận khả nghịch modulo 26</li>
-                            <li>Không tự động xử lý các ký tự không phải chữ cái</li>
-                        </ul>
-                    </td>
-                </tr>
-            </table>
-            <div id="bang-content"></div>
+    <div class="container">
+        <h1>Hill Cipher - Mật mã Ma trận</h1>
+        <p>Một hệ mã hóa cổ điển sử dụng đại số tuyến tính trong mật mã học</p>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('theory')">Lý Thuyết</div>
+            <div class="tab" onclick="switchTab('practice')">Thực Hành</div>
         </div>
-
+        
+        <div id="theory" class="tab-content active">
+            <div class="theory-section">
+                <h2>1. Giới thiệu về Hill Cipher</h2>
+                <p>Hill Cipher là một hệ mật mã thay thế đa biểu (polygraphic substitution cipher) được phát minh bởi Lester S. Hill năm 1929. Đây là một trong những hệ mật mã đầu tiên sử dụng đại số tuyến tính (ma trận) trong mã hóa.</p>
+                
+                <div class="definition">
+                    <h3>Định nghĩa Hill Cipher</h3>
+                    <p>Hill Cipher là hệ mật mã khóa đối xứng sử dụng ma trận khóa vuông <span class="math">K</span> để mã hóa và ma trận nghịch đảo <span class="math">K⁻¹</span> để giải mã. Mỗi ký tự được ánh xạ thành số (A=0, B=1,..., Z=25), và các ký tự được xử lý theo từng khối (block) có độ dài bằng kích thước ma trận khóa.</p>
+                </div>
+                
+                <h2>2. Nguyên lý hoạt động</h2>
+                <h3>Mã hóa</h3>
+                <p>Cho ma trận khóa <span class="math">K</span> kích thước <span class="math">n×n</span> và vector văn bản rõ <span class="math">P</span> (gồm <span class="math">n</span> ký tự):</p>
+                <p class="math">C = K × P mod 26</p>
+                <p>Trong đó <span class="math">C</span> là vector bản mã kết quả.</p>
+                
+                <h3>Giải mã</h3>
+                <p>Sử dụng ma trận nghịch đảo <span class="math">K⁻¹</span> (modulo 26):</p>
+                <p class="math">P = K⁻¹ × C mod 26</p>
+                
+                <div class="definition">
+                    <h3>Điều kiện ma trận khóa</h3>
+                    <p>Ma trận khóa <span class="math">K</span> phải thỏa mãn:</p>
+                    <ol>
+                        <li>Là ma trận vuông</li>
+                        <li>Có định thức <span class="math">det(K) ≠ 0</span></li>
+                        <li><span class="math">gcd(det(K), 26) = 1</span> (định thức và 26 nguyên tố cùng nhau)</li>
+                    </ol>
+                </div>
+                
+                <div class="example">
+                    <h3>Ví dụ minh họa</h3>
+                    <p>Cho ma trận khóa 2×2:</p>
+                    <p class="math">K = [ 3 3 ]
+        [ 2 5 ]</p>
+                    <p>Văn bản rõ: "HELP" → "HE LP"</p>
+                    <p>Mã hóa "HE" (H=7, E=4):</p>
+                    <p class="math">[ 3 3 ] [ 7 ] = [ 3×7 + 3×4 ] = [ 33 mod 26 ] = [ 7 ] → "H"
+        [ 2 5 ] [ 4 ]   [ 2×7 + 5×4 ]   [ 34 mod 26 ]   [ 8 ] → "I"</p>
+                    <p>Kết quả: "HE" → "HI"</p>
+                </div>
+                
+                <h2>3. Ưu điểm và Nhược điểm</h2>
+                <table>
+                    <tr>
+                        <th>Ưu điểm</th>
+                        <th>Nhược điểm</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <ul>
+                                <li>Mạnh hơn các mật mã thay thế đơn giản</li>
+                                <li>Khó bị phá bằng phương pháp phân tích tần suất</li>
+                                <li>Có thể thay đổi khóa dễ dàng bằng cách thay ma trận</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <li>Dễ bị tấn công nếu biết một cặp bản rõ/bản mã đủ dài</li>
+                                <li>Yêu cầu ma trận khả nghịch modulo 26</li>
+                                <li>Không tự động xử lý các ký tự không phải chữ cái</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div id="practice" class="tab-content">
+            <h2>Công Cụ Mã Hóa/Giải Mã Hill Cipher</h2>
+            
+            <div class="input-group">
+                <label for="key">Khóa (nhập chữ cái cho ma trận 2x2, ví dụ "HILL"):</label>
+                <input type="text" id="key" placeholder="Nhập khóa (không quá 10 chữ cái)" maxlength="4">
+            </div>
+            
+            <div class="input-group">
+                <label for="plaintext">Văn bản cần mã hóa (chỉ chữ cái):</label>
+                <textarea id="plaintext" placeholder="Nhập văn bản cần mã hóa"></textarea>
+            </div>
+            
+            <div class="button-group">
+                <button onclick="encrypt()">Mã hóa</button>
+                <button onclick="decrypt()">Giải mã</button>
+                <button onclick="generateRandomKey()">Tạo khóa ngẫu nhiên</button>
+                <button onclick="clearAll()">Xóa tất cả</button>
+                <button onclick="showExample()">Ví dụ mẫu</button>
+            </div>
+            
+            <div class="result">
+                <h3>Kết quả:</h3>
+                <div id="matrixInfo"></div>
+                <label for="ciphertext">Bản mã:</label>
+                <textarea id="ciphertext" readonly></textarea>
+                <label for="decryptedText">Bản giải mã:</label>
+                <textarea id="decryptedText" readonly></textarea>
+                <div id="processSteps" class="process-steps"></div>
+                <div id="status"></div>
+            </div>
+            
+            <div class="instructions">
+                <h3>Hướng dẫn sử dụng:</h3>
+                <ol>
+                    <li>Nhập khóa gồm 4 chữ cái (tự động chuyển thành ma trận 2x2)</li>
+                    <li>Nhập văn bản cần mã hóa (tự động loại bỏ ký tự không phải chữ cái)</li>
+                    <li>Nhấn "Mã hóa" hoặc "Giải mã"</li>
+                    <li>Nhấn "Tạo khóa ngẫu nhiên" để hệ thống tạo một khóa hợp lệ</li>
+                    <li>Nhấn "Ví dụ mẫu" để xem ví dụ minh họa</li>
+                </ol>
+                <p><strong>Lưu ý:</strong> 
+                <ul>
+                    <li>Khóa phải tạo ra ma trận khả nghịch modulo 26 (định thức phải nguyên tố cùng nhau với 26)</li>
+                    <li>Nếu văn bản cần mã hóa có độ dài lẻ, hệ thống sẽ tự động thêm ký tự cuối cùng để đệm</li>
+                </ul>
+                </p>
+            </div>
+        </div>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        // Chuyển đổi giữa các tab
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+        
+        // Chuyển ký tự sang số (A=0, B=1,..., Z=25)
+        function charToNum(c) {
+            return c.toUpperCase().charCodeAt(0) - 65;
+        }
+
+        // Chuyển số sang ký tự
+        function numToChar(n) {
+            return String.fromCharCode((n % 26 + 26) % 26 + 65);
+        }
+
+        // Tính định thức của ma trận 2x2
+        function determinant(matrix) {
+            return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+        }
+
+        // Tìm nghịch đảo modulo 26
+        function modInverse(a, m) {
+            a = (a % m + m) % m;
+            for (let x = 1; x < m; x++) {
+                if ((a * x) % m == 1) {
+                    return x;
+                }
+            }
+            return -1; // Không tồn tại nghịch đảo
+        }
+
+        // Tạo ma trận khóa từ chuỗi
+        function createKeyMatrix(keyStr) {
+            const size = Math.sqrt(keyStr.length);
+            const matrix = new Array(size);
+            for (let i = 0; i < size; i++) {
+                matrix[i] = new Array(size);
+                for (let j = 0; j < size; j++) {
+                    matrix[i][j] = charToNum(keyStr[i * size + j]);
+                }
+            }
+            return matrix;
+        }
+
+        // Kiểm tra khóa hợp lệ
+        function isValidKey(keyMatrix) {
+            const det = determinant(keyMatrix);
+            return det !== 0 && modInverse(det, 26) !== -1;
+        }
+
+        // Tạo ma trận nghịch đảo
+        function inverseMatrix(matrix) {
+            const det = determinant(matrix);
+            const detInv = modInverse(det, 26);
+            
+            const adjugate = [
+                [matrix[1][1], -matrix[0][1]],
+                [-matrix[1][0], matrix[0][0]]
+            ];
+            
+            const inverse = new Array(2);
+            for (let i = 0; i < 2; i++) {
+                inverse[i] = new Array(2);
+                for (let j = 0; j < 2; j++) {
+                    inverse[i][j] = (adjugate[i][j] * detInv) % 26;
+                    if (inverse[i][j] < 0) inverse[i][j] += 26;
+                }
+            }
+            
+            return inverse;
+        }
+
+        // Mã hóa/giải mã một cặp ký tự
+        function processPair(pair, matrix) {
+            const a = charToNum(pair[0]);
+            const b = charToNum(pair[1]);
+            
+            const c = (matrix[0][0] * a + matrix[0][1] * b) % 26;
+            const d = (matrix[1][0] * a + matrix[1][1] * b) % 26;
+            
+            return numToChar(c) + numToChar(d);
+        }
+
+        // Xử lý toàn bộ văn bản
+        function processText(text, matrix) {
+            // Làm sạch và chuẩn hóa văn bản
+            const cleanText = text.toUpperCase().replace(/[^A-Z]/g, '');
+            if (cleanText.length === 0) return '';
+            
+            // Thêm padding nếu độ dài lẻ
+            let paddedText = cleanText;
+            if (paddedText.length % 2 !== 0) {
+                paddedText += paddedText[paddedText.length - 1];
+            }
+            
+            // Xử lý từng cặp ký tự
+            let result = '';
+            for (let i = 0; i < paddedText.length; i += 2) {
+                const pair = paddedText.substr(i, 2);
+                result += processPair(pair, matrix);
+            }
+            
+            return result;
+        }
+
+        // Mã hóa văn bản
+        function encrypt() {
+            try {
+                const keyStr = document.getElementById('key').value;
+                const plaintext = document.getElementById('plaintext').value;
+                
+                if (!keyStr || keyStr.length !== 4) {
+                    throw new Error("Khóa phải có đúng 4 ký tự");
+                }
+                
+                if (!plaintext) {
+                    throw new Error("Vui lòng nhập văn bản cần mã hóa");
+                }
+                
+                const keyMatrix = createKeyMatrix(keyStr);
+                if (!isValidKey(keyMatrix)) {
+                    throw new Error("Ma trận khóa không khả nghịch modulo 26");
+                }
+                
+                const ciphertext = processText(plaintext, keyMatrix);
+                document.getElementById('ciphertext').value = ciphertext;
+                
+                // Hiển thị thông tin chi tiết
+                const det = determinant(keyMatrix);
+                const detInv = modInverse(det, 26);
+                
+                let processHTML = `
+                    <div class="process-step">
+                        <h4>Thông tin ma trận khóa:</h4>
+                        <div class="matrix">K = [${keyStr[0]}(${keyMatrix[0][0]}) ${keyStr[1]}(${keyMatrix[0][1]})]
+    [${keyStr[2]}(${keyMatrix[1][0]}) ${keyStr[3]}(${keyMatrix[1][1]})]</div>
+                        <p>Định thức = ${det}</p>
+                        <p>Nghịch đảo định thức mod 26 = ${detInv}</p>
+                    </div>
+                    <div class="process-step">
+                        <h4>Kết quả mã hóa:</h4>
+                        <p>${ciphertext}</p>
+                    </div>
+                `;
+                
+                document.getElementById('processSteps').innerHTML = processHTML;
+                document.getElementById('status').innerHTML = 
+                    `<div class="success">Mã hóa thành công!</div>`;
+                
+            } catch (error) {
+                document.getElementById('status').innerHTML = 
+                    `<div class="error">Lỗi: ${error.message}</div>`;
+            }
+        }
+
+        // Giải mã văn bản
+        function decrypt() {
+            try {
+                const keyStr = document.getElementById('key').value;
+                const ciphertext = document.getElementById('ciphertext').value;
+                
+                if (!keyStr || keyStr.length !== 4) {
+                    throw new Error("Khóa phải có đúng 4 ký tự");
+                }
+                
+                if (!ciphertext) {
+                    throw new Error("Vui lòng nhập bản mã cần giải mã");
+                }
+                
+                if (ciphertext.length % 2 !== 0) {
+                    throw new Error("Độ dài bản mã phải chẵn");
+                }
+                
+                const keyMatrix = createKeyMatrix(keyStr);
+                if (!isValidKey(keyMatrix)) {
+                    throw new Error("Ma trận khóa không khả nghịch modulo 26");
+                }
+                
+                const inverseKeyMatrix = inverseMatrix(keyMatrix);
+                const plaintext = processText(ciphertext, inverseKeyMatrix);
+                document.getElementById('decryptedText').value = plaintext;
+                
+                // Hiển thị thông tin chi tiết
+                const det = determinant(keyMatrix);
+                const detInv = modInverse(det, 26);
+                
+                let processHTML = `
+                    <div class="process-step">
+                        <h4>Thông tin ma trận khóa và ma trận nghịch đảo:</h4>
+                        <div class="matrix">K = [${keyStr[0]}(${keyMatrix[0][0]}) ${keyStr[1]}(${keyMatrix[0][1]})]
+    [${keyStr[2]}(${keyMatrix[1][0]}) ${keyStr[3]}(${keyMatrix[1][1]})]</div>
+                        <p>Định thức = ${det}</p>
+                        <p>Nghịch đảo định thức mod 26 = ${detInv}</p>
+                        <div class="matrix">K⁻¹ = [${inverseKeyMatrix[0][0]} ${inverseKeyMatrix[0][1]}]
+    [${inverseKeyMatrix[1][0]} ${inverseKeyMatrix[1][1]}]</div>
+                    </div>
+                    <div class="process-step">
+                        <h4>Kết quả giải mã:</h4>
+                        <p>${plaintext}</p>
+                    </div>
+                `;
+                
+                document.getElementById('processSteps').innerHTML = processHTML;
+                document.getElementById('status').innerHTML = 
+                    `<div class="success">Giải mã thành công!</div>`;
+                
+            } catch (error) {
+                document.getElementById('status').innerHTML = 
+                    `<div class="error">Lỗi: ${error.message}</div>`;
+            }
+        }
+
+        // Tạo khóa ngẫu nhiên
+        function generateRandomKey() {
+            let keyMatrix;
+            let keyStr;
+            let det;
+            let detInv;
+            
+            do {
+                keyStr = '';
+                for (let i = 0; i < 4; i++) {
+                    keyStr += String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+                }
+                
+                keyMatrix = createKeyMatrix(keyStr);
+                det = determinant(keyMatrix);
+                detInv = modInverse(det, 26);
+            } while (det === 0 || detInv === -1);
+            
+            document.getElementById('key').value = keyStr;
+            document.getElementById('status').innerHTML = 
+                `<div class="success">Đã tạo khóa ngẫu nhiên: ${keyStr} (Định thức = ${det}, Nghịch đảo = ${detInv})</div>`;
+        }
+
+        // Xóa tất cả
+        function clearAll() {
+            document.getElementById('key').value = '';
+            document.getElementById('plaintext').value = '';
+            document.getElementById('ciphertext').value = '';
+            document.getElementById('decryptedText').value = '';
+            document.getElementById('processSteps').innerHTML = '';
+            document.getElementById('status').innerHTML = '';
+        }
+
+        // Hiển thị ví dụ mẫu
+        function showExample() {
+            document.getElementById('key').value = 'HILL';
+            document.getElementById('plaintext').value = 'ATTACK AT DAWN';
+            document.getElementById('status').innerHTML = 
+                `<div class="success">Đã tải ví dụ mẫu với khóa "HILL" và văn bản "ATTACK AT DAWN". Nhấn "Mã hóa" để xem kết quả.</div>`;
+        }
+    </script>
 </body>
 </html>
