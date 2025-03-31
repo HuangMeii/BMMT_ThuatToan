@@ -4,27 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Caesar Cipher</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
-        input, button { margin: 10px; padding: 5px; }
-        textarea { width: 300px; height: 100px; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h2>Caesar Cipher</h2>
-    <label for="text">Nhập văn bản:</label>
-    <textarea id="text"></textarea><br>
-    <label for="shift">Dịch chuyển:</label>
-    <input type="number" id="shift" min="1" max="25" value="3"><br>
-    <button onclick="encryptText()">Mã hóa</button>
-    <button onclick="decryptText()">Giải mã</button>
-    
-    <h3>Kết quả mã hóa:</h3>
-    <textarea id="encryptedText" readonly></textarea>
-    
-    <h3>Kết quả giải mã:</h3>
-    <textarea id="decryptedText" readonly></textarea>
+    <div class="sidenav" id="mySidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#intro">Giới thiệu</a>
+        <a href="#application">Ứng Dụng</a>
+        <a href="#algorithm">Thuật Toán</a>
+        <a href="#calculation">Tính Toán</a>
+    </div>
 
+    <div id="main">
+        <span class="menu-btn" onclick="openNav()">&#9776; Menu</span>
+
+        <div id="intro" class="content-section">
+            <h2>Giới thiệu</h2>
+            <p>Mật mã Caesar (Caesar Cipher) là một phương pháp mã hóa đơn giản thuộc nhóm mật mã thay thế. Nó hoạt động bằng cách dịch chuyển mỗi chữ cái trong bản rõ một số vị trí cố định trong bảng chữ cái.</p>
+            
+            <h3>Ví dụ</h3>
+            <p>Với khóa dịch 3:</p>
+            <p><strong>Bản rõ:</strong> HELLO</p>
+            <p><strong>Bản mã:</strong> KHOOR</p>
+        </div>
+
+        <div id="application" class="content-section">
+            <h2>Ứng Dụng</h2>
+            <h3>Ứng dụng trong thực tế</h3>
+            <ul>
+                <li><strong>Trò chơi và câu đố:</strong> Thường được dùng trong trò chơi giải đố, escape room hoặc các thử thách mật mã đơn giản.</li>
+                <li><strong>Giáo dục:</strong> Giúp học sinh hiểu về nguyên tắc mã hóa và bảo mật thông tin.</li>
+                <li><strong>Ẩn nội dung đơn giản:</strong> Dùng để giấu tin nhắn dễ dàng khỏi những người không biết khóa.</li>
+                <li><strong>Bảo vệ thông tin trong lịch sử:</strong> Quân đội La Mã đã sử dụng nó để bảo vệ thông tin liên lạc.</li>
+            </ul>
+            
+            <h3>Ứng dụng trong công nghệ</h3>
+            <ul>
+                <li><strong>Bảo vệ mật khẩu yếu:</strong> Một số hệ thống cũ từng dùng biến thể của Caesar để mã hóa mật khẩu.</li>
+                <li><strong>Các thuật toán mã hóa phức tạp:</strong> Là nền tảng cho các thuật toán mã hóa hiện đại như ROT13 hay Vigenère.</li>
+                <li><strong>Watermarking (đóng dấu dữ liệu):</strong> Dùng để tạo mã nhận diện đơn giản trong dữ liệu số.</li>
+            </ul>
+        </div>
+
+        <div id="algorithm" class="content-section">
+            <h2>Thuật Toán</h2>
+            <p>Mỗi chữ cái trong bản rõ (plaintext) được thay thế bằng chữ cái dịch k vị trí trong bảng chữ cái.</p>
+            
+            <h3>Công thức mã hóa:</h3>
+            <p><code>C = (P + k) mod 26</code></p>
+            <p>Trong đó:</p>
+            <ul>
+                <li><strong>C</strong> là chữ cái sau khi mã hóa</li>
+                <li><strong>P</strong> là chữ cái trong bản rõ</li>
+                <li><strong>k</strong> là số bước dịch chuyển (khóa)</li>
+                <li><strong>26</strong> là số lượng chữ cái trong bảng chữ cái tiếng Anh</li>
+            </ul>
+            
+            <h3>Giải mã (Decryption)</h3>
+            <p>Giải mã bằng cách dịch ngược lại k vị trí.</p>
+            <p><code>P = (C - k) mod 26</code></p>
+            
+            <h3>Ví dụ</h3>
+            <p>Với khóa k=3</p>
+            <p>Mã hóa 'A' → 'D'</p>
+            <p>Giải mã 'D' → 'A'</p>
+        </div>
+
+        <div id="calculation" class="content-section">
+            <h2>Tính Toán</h2>
+            <div class="cipher-container">
+                <h3>Trình mã hóa/giải mã Caesar Cipher</h3>
+                <label for="text">Nhập văn bản:</label>
+                <textarea id="text" placeholder="Nhập văn bản cần mã hóa hoặc giải mã..."></textarea>
+                
+                <label for="shift">Dịch chuyển (khóa k):</label>
+                <input type="number" id="shift" min="1" max="25" value="3">
+                
+                <div class="btn-group">
+                    <button onclick="encryptText()">Mã hóa</button>
+                    <button onclick="decryptText()">Giải mã</button>
+                </div>
+                
+                <h3>Kết quả mã hóa:</h3>
+                <textarea id="encryptedText" readonly placeholder="Kết quả mã hóa sẽ hiển thị ở đây..."></textarea>
+                
+                <h3>Kết quả giải mã:</h3>
+                <textarea id="decryptedText" readonly placeholder="Kết quả giải mã sẽ hiển thị ở đây..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- GIỮ NGUYÊN TOÀN BỘ PHẦN JAVASCRIPT -->
     <script>
         function encryptText() {
             let text = document.getElementById("text").value;
@@ -49,6 +119,18 @@
                 }
                 return char;
             }).join('');
+        }
+        
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "250px";
+            document.body.style.backgroundColor = "rgba(0,0,0,0.1)";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+            document.body.style.backgroundColor = "white";
         }
     </script>
 </body>
