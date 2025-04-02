@@ -4,62 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mô phỏng thuật toán RSA</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- GIỮ NGUYÊN PHẦN JAVASCRIPT -->
     <script>
+        // TOÀN BỘ PHẦN JAVASCRIPT GIỮ NGUYÊN NHƯ BAN ĐẦU
+        function calculate(a, k, n) {
+            if (isNaN(a) || isNaN(k) || isNaN(n)) {
+                alert("Vui lòng nhập đầy đủ giá trị!");
+                return;
+            }
 
+            if (k === 0) {
+                document.getElementById('finalResult').innerText = "Kết quả: 1";
+                return;
+            }
 
-      function calculate(a, k, n) {
-          if (isNaN(a) || isNaN(k) || isNaN(n)) {
-              alert("Vui lòng nhập đầy đủ giá trị!");
-              return;
-          }
+            const binaryK = k.toString(2).split('').reverse(); 
+            let b = 1;
+            let A = a % n;
 
-          if (k === 0) {
-              document.getElementById('finalResult').innerText = "Kết quả: 1";
-              return;
-          }
+            if (binaryK[0] === "1") {
+                b = A;
+            }
 
-          const binaryK = k.toString(2).split('').reverse(); 
-          let b = 1;
-          let A = a % n;
+            const binaryRow = document.getElementById('binaryRow');
+            const aRow = document.getElementById('aRow');
+            const bRow = document.getElementById('bRow');
+            const headerRow = document.getElementById('headerRow');
+            headerRow.innerHTML = '<th></th>';
 
-          if (binaryK[0] === "1") {
-              b = A;
-          }
+            binaryRow.innerHTML = '<th>k<sub>i</sub></th>';
+            aRow.innerHTML = '<th>A</th>';
+            bRow.innerHTML = '<th>B</th>';
 
-          const binaryRow = document.getElementById('binaryRow');
-          const aRow = document.getElementById('aRow');
-          const bRow = document.getElementById('bRow');
-          const headerRow = document.getElementById('headerRow');
-          headerRow.innerHTML = '<th></th>';
+            for (let i = 0; i < binaryK.length; i++) {
+                const K_i = parseInt(binaryK[i]);
+                if (i > 0) {
+                    A = (A * A) % n;
+                }
+                if (K_i === 1 && i > 0) {
+                    b = (b * A) % n;
+                }
+                headerRow.innerHTML += `<th>${i}</th>`;
+                binaryRow.innerHTML += `<td>${K_i}</td>`;
+                aRow.innerHTML += `<td>${A}</td>`;
+                bRow.innerHTML += `<td>${b}</td>`;
+            }
 
-          binaryRow.innerHTML = '<th>k<sub>i</sub></th>';
-          aRow.innerHTML = '<th>A</th>';
-          bRow.innerHTML = '<th>B</th>';
-
-          for (let i = 0; i < binaryK.length; i++) {
-              const K_i = parseInt(binaryK[i]);
-              if (i > 0) {
-                  A = (A * A) % n;
-              }
-              if (K_i === 1 && i > 0) {
-                  b = (b * A) % n;
-              }
-              headerRow.innerHTML += `<th>${i}</th>`;
-              binaryRow.innerHTML += `<td>${K_i}</td>`;
-              aRow.innerHTML += `<td>${A}</td>`;
-              bRow.innerHTML += `<td>${b}</td>`;
-          }
-
-          document.getElementById('finalResult').innerText = `Kết quả: ${b}`;
-          document.getElementById('resultTable').style.display = 'table';
-      }
-      
-      function extendedEuclid(a, b) {
-            // x0, x1, y0, y1 là các biến trung gian để tính x, y
+            document.getElementById('finalResult').innerText = `Kết quả: ${b}`;
+            document.getElementById('resultTable').style.display = 'table';
+        }
+        
+        function extendedEuclid(a, b) {
             let x0 = 1, x1 = 0, y0 = 0, y1 = 1;
             let steps = [];
 
-            // Đẩy dòng khởi tạo (trước khi vòng lặp) vào bảng
             steps.push({
                 q: '-',
                 r: '-',
@@ -73,16 +72,13 @@
                 y1: y1
             });
 
-            // Vòng lặp chính
             while (b !== 0) {
                 let q = Math.floor(a / b);
                 let r = a % b;
 
-                // Tính x, y mới
                 let newX = x0 - q * x1;
                 let newY = y0 - q * y1;
 
-                // Cập nhật a, b, x0, x1, y0, y1
                 a = b;
                 b = r;
                 x0 = x1;
@@ -90,7 +86,6 @@
                 y0 = y1;
                 y1 = newY;
 
-                // Lưu trạng thái *sau* khi cập nhật
                 steps.push({
                     q: q,
                     r: r,
@@ -105,7 +100,6 @@
                 });
             }
 
-            // a cuối cùng là gcd, x0, y0 là nghiệm
             return {
                 gcd: a,
                 x: x0,
@@ -137,231 +131,275 @@
         }
 
         function generateKeys() {
-          let p = parseInt(document.getElementById('p').value);
-          let q = parseInt(document.getElementById('q').value);
-          let e = parseInt(document.getElementById('e').value);
+            let p = parseInt(document.getElementById('p').value);
+            let q = parseInt(document.getElementById('q').value);
+            let e = parseInt(document.getElementById('e').value);
 
-          if (isNaN(p) || isNaN(q) || isNaN(e)) {
-              alert("Vui lòng nhập đầy đủ p, q, e!");
-              return;
-          }
+            if (isNaN(p) || isNaN(q) || isNaN(e)) {
+                alert("Vui lòng nhập đầy đủ p, q, e!");
+                return;
+            }
 
-          let n = p * q;
-          let phi = (p - 1) * (q - 1);
-          let gcdCheck = gcd(e, phi);
-          let euclidResult = extendedEuclid(e, phi);
-          let d = (euclidResult.x % phi + phi) % phi; // Gọi thuật toán Euclide Mở Rộng
+            let n = p * q;
+            let phi = (p - 1) * (q - 1);
+            let gcdCheck = gcd(e, phi);
+            let euclidResult = extendedEuclid(e, phi);
+            let d = (euclidResult.x % phi + phi) % phi;
 
-          let resultText = `<h3>Các bước tính toán:</h3>`;
-          resultText += `<p><strong>Bước 1:</strong> Chọn hai số nguyên tố p = ${p}, q = ${q}.</p>`;
-          resultText += `<p><strong>Bước 2:</strong> Tính n = p * q = ${p} * ${q} = <strong>${n}</strong>.</p>`;
-          resultText += `<p><strong>Bước 3:</strong> Tính Ф(n) = (p - 1) * (q - 1) = (${p - 1}) * (${q - 1}) = <strong>${phi}</strong>.</p>`;
+            let resultText = `<h3>Các bước tính toán:</h3>`;
+            resultText += `<p><strong>Bước 1:</strong> Chọn hai số nguyên tố p = ${p}, q = ${q}.</p>`;
+            resultText += `<p><strong>Bước 2:</strong> Tính n = p * q = ${p} * ${q} = <strong>${n}</strong>.</p>`;
+            resultText += `<p><strong>Bước 3:</strong> Tính Ф(n) = (p - 1) * (q - 1) = (${p - 1}) * (${q - 1}) = <strong>${phi}</strong>.</p>`;
 
-          if (gcdCheck === 1) {
-              resultText += `<p><strong>Bước 4:</strong> Chọn e = ${e}, vì gcd(e, Ф(n)) = gcd(${e}, ${phi}) = 1 và 1 < e < Ф(n) (thỏa mãn).</p>`;
-          } else {
-              alert("e không nguyên tố cùng nhau với Ф(n). Hãy chọn giá trị e khác.");
-              return;
-          }
+            if (gcdCheck === 1) {
+                resultText += `<p><strong>Bước 4:</strong> Chọn e = ${e}, vì gcd(e, Ф(n)) = gcd(${e}, ${phi}) = 1 và 1 < e < Ф(n) (thỏa mãn).</p>`;
+            } else {
+                alert("e không nguyên tố cùng nhau với Ф(n). Hãy chọn giá trị e khác.");
+                return;
+            }
 
-          if (d === -1) {
-              alert("Không tìm được d. Hãy chọn giá trị e khác.");
-              return;
-          }
+            if (d === -1) {
+                alert("Không tìm được d. Hãy chọn giá trị e khác.");
+                return;
+            }
 
-          resultText += `<p><strong>Bước 5:</strong> Tính d = e⁻¹ mod Ф(n), tức là d = ${e}⁻¹ mod ${phi} = <strong>${d}</strong>.</p>`;
-          
-          let euclidStepsHtml = `<h3>Quá trình tính d theo Euclide mở rộng:</h3>`;
-          euclidStepsHtml += `<table border="1"><tr>
-              <th>q</th>
-              <th>r</th>
-              <th>x</th>
-              <th>y</th>
-              <th>a</th>
-              <th>b</th>
-              <th>x2</th>
-              <th>x1</th>
-              <th>y2</th>
-              <th>y1</th>
-          </tr>`;
+            resultText += `<p><strong>Bước 5:</strong> Tính d = e⁻¹ mod Ф(n), tức là d = ${e}⁻¹ mod ${phi} = <strong>${d}</strong>.</p>`;
+            
+            let euclidStepsHtml = `<h3>Quá trình tính d theo Euclide mở rộng:</h3>`;
+            euclidStepsHtml += `<table><tr>
+                <th>q</th>
+                <th>r</th>
+                <th>x</th>
+                <th>y</th>
+                <th>a</th>
+                <th>b</th>
+                <th>x2</th>
+                <th>x1</th>
+                <th>y2</th>
+                <th>y1</th>
+            </tr>`;
 
             euclidResult.steps.forEach(step => {
-            euclidStepsHtml += `<tr>
-                <td>${step.q}</td>
-                <td>${step.r}</td>  
-                <td>${step.x}</td>
-                <td>${step.y}</td>
-                <td>${step.a}</td>
-                <td>${step.b}</td>
-                <td>${step.x2}</td>
-                <td>${step.x1}</td>
-                <td>${step.y2}</td>
-                <td>${step.y1}</td>
-            </tr>`;
-        });
+                euclidStepsHtml += `<tr>
+                    <td>${step.q}</td>
+                    <td>${step.r}</td>  
+                    <td>${step.x}</td>
+                    <td>${step.y}</td>
+                    <td>${step.a}</td>
+                    <td>${step.b}</td>
+                    <td>${step.x2}</td>
+                    <td>${step.x1}</td>
+                    <td>${step.y2}</td>
+                    <td>${step.y1}</td>
+                </tr>`;
+            });
 
+            euclidStepsHtml += `</table>`;
+            document.getElementById('keySteps').innerHTML = resultText + euclidStepsHtml;
 
-          euclidStepsHtml += `</table>`;
-          document.getElementById('keySteps').innerHTML = resultText + euclidStepsHtml;
+            resultText += `<p><strong>Bước 6:</strong> Khóa công khai = {<strong>${e}, ${n}</strong>}, khóa riêng = {<strong>${d}, ${n}</strong>}.</p>`;
 
+            document.getElementById('keySteps').innerHTML = resultText + euclidStepsHtml;
 
+            document.getElementById('encryptSection').classList.remove('hidden');
 
-
-          resultText += `<p><strong>Bước 6:</strong> Khóa công khai = {<strong>${e}, ${n}</strong>}, khóa riêng = {<strong>${d}, ${n}</strong>}.</p>`;
-
-          document.getElementById('keySteps').innerHTML = resultText + euclidStepsHtml;
-
-          document.getElementById('encryptSection').style.display = 'block';
-
-          sessionStorage.setItem('rsa_n', n);
-          sessionStorage.setItem('rsa_e', e);
-          sessionStorage.setItem('rsa_d', d);
-      }
-
-      function encryptMessage() {
-    let m = parseInt(document.getElementById('length').value);
-    let n = parseInt(sessionStorage.getItem('rsa_n'));
-    let e = parseInt(sessionStorage.getItem('rsa_e'));
-
-    if (isNaN(m) || m <= 0 || m >= n) {
-        alert("Vui lòng nhập m hợp lệ (0 < m < n)!");
-        return;
-    }
-
-    let encryptedText = modExp(m, e, n);
-    let stepsHtml = generateModExpTable(m, e, n);
-
-    let encryptSteps = `<h3>Các bước mã hóa:</h3>`;
-    encryptSteps += `<p><strong>Bước 7:</strong> Mã hóa C = m^e mod n = ${m}^${e} mod ${n} = <strong>${encryptedText}</strong>.</p>`;
-
-    document.getElementById('encryptSteps').innerHTML = encryptSteps + stepsHtml;
-    document.getElementById('cipherText').innerText = encryptedText;
-    document.getElementById('decryptSection').style.display = 'block';
-
-    sessionStorage.setItem('rsa_m', m);
-    document.getElementById('modExpSteps').innerHTML = stepsHtml;
-}
-
-// Hàm tính lũy thừa theo mod
-function modExp(a, k, n) {
-    let result = 1;
-    a = a % n;
-
-    while (k > 0) {
-        if (k % 2 === 1) {
-            result = (result * a) % n;
+            sessionStorage.setItem('rsa_n', n);
+            sessionStorage.setItem('rsa_e', e);
+            sessionStorage.setItem('rsa_d', d);
         }
-        k = Math.floor(k / 2);
-        a = (a * a) % n;
-    }
-    return result;
-}
 
-// Hàm tạo bảng hiển thị quá trình tính
-function generateModExpTable(a, k, n) {
-    let binaryK = k.toString(2).split('').reverse();
-    let b = 1;
-    let A = a % n;
-    
-    // Chuẩn bị dữ liệu cho bảng ngang
-    let headers = ['Bước'];
-    let kiRow = ['k<sub>i</sub>'];
-    let aRow = ['A'];
-    let bRow = ['B'];
-    
-    for (let i = 0; i < binaryK.length; i++) {
-        headers.push(i);
-        let ki = parseInt(binaryK[i]);
-        
-        if (i > 0) A = (A * A) % n;
-        if (ki === 1) b = (b * A) % n;
-        
-        kiRow.push(ki);
-        aRow.push(A);
-        bRow.push(b);
-    }
-    
-    // Xây dựng bảng ngang
-    let tableHtml = `<h3>Quá trình tính C theo thuật toán a<sup>k</sup> mod n:</h3>`;
-    tableHtml += `<table border="1" style="width: 100%;">`;
-    
-    // Thêm hàng tiêu đề
-    tableHtml += `<tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
-    
-    // Thêm các hàng dữ liệu
-    tableHtml += `<tr>${kiRow.map(c => `<td>${c}</td>`).join('')}</tr>`;
-    tableHtml += `<tr>${aRow.map(c => `<td>${c}</td>`).join('')}</tr>`;
-    tableHtml += `<tr>${bRow.map(c => `<td>${c}</td>`).join('')}</tr>`;
-    
-    tableHtml += `</table>`;
-    return tableHtml;
-}
+        function encryptMessage() {
+            let m = parseInt(document.getElementById('length').value);
+            let n = parseInt(sessionStorage.getItem('rsa_n'));
+            let e = parseInt(sessionStorage.getItem('rsa_e'));
 
+            if (isNaN(m) || m <= 0 || m >= n) {
+                alert("Vui lòng nhập m hợp lệ (0 < m < n)!");
+                return;
+            }
 
+            let encryptedText = modExp(m, e, n);
+            let stepsHtml = generateModExpTable(m, e, n);
 
-      function decryptMessage() {
-          // Lấy các giá trị cần thiết
-          let n = parseInt(sessionStorage.getItem('rsa_n'));
-          let d = parseInt(sessionStorage.getItem('rsa_d'));
-          let encryptedValue = parseInt(document.getElementById('cipherText').innerText);
-          let original_m = parseInt(sessionStorage.getItem('rsa_m'));
+            let encryptSteps = `<h3>Các bước mã hóa:</h3>`;
+            encryptSteps += `<p><strong>Bước 7:</strong> Mã hóa C = m^e mod n = ${m}^${e} mod ${n} = <strong>${encryptedText}</strong>.</p>`;
 
-          // Kiểm tra giá trị hợp lệ
-          if (isNaN(n) || isNaN(d) || isNaN(encryptedValue)) {
-              alert("Dữ liệu giải mã không hợp lệ!");
-              return;
-          }
+            document.getElementById('encryptSteps').innerHTML = encryptSteps + stepsHtml;
+            document.getElementById('cipherText').innerText = encryptedText;
+            document.getElementById('decryptSection').classList.remove('hidden');
 
-          // Giải mã
-          let decryptedValue = modPow(encryptedValue, d, n);
-          
-          // Tạo bảng các bước giải mã (sửa: truyền encryptedValue thay vì decryptedValue)
-          let stepsHtml = generateModExpTable(encryptedValue, d, n);
+            sessionStorage.setItem('rsa_m', m);
+            document.getElementById('modExpSteps').innerHTML = stepsHtml;
+        }
 
-          // Hiển thị kết quả
-          let decryptSteps = `<h3>Các bước giải mã:</h3>`;
-          decryptSteps += `<p><strong>Bước 8:</strong> Giải mã m = C^d mod n = ${encryptedValue}^${d} mod ${n} = <strong>${decryptedValue}</strong>.</p>`;
-          decryptSteps += stepsHtml;
+        function modExp(a, k, n) {
+            let result = 1;
+            a = a % n;
 
-          document.getElementById('decryptSteps').innerHTML = decryptSteps;
-          
-          // Hiển thị kết quả (sửa: dùng innerHTML thay vì innerText)
-          let resultText = `Kết quả giải mã: ${decryptedValue}`;
-      }
+            while (k > 0) {
+                if (k % 2 === 1) {
+                    result = (result * a) % n;
+                }
+                k = Math.floor(k / 2);
+                a = (a * a) % n;
+            }
+            return result;
+        }
+
+        function generateModExpTable(a, k, n) {
+            let binaryK = k.toString(2).split('').reverse();
+            let b = 1;
+            let A = a % n;
+            
+            let headers = ['Bước'];
+            let kiRow = ['k<sub>i</sub>'];
+            let aRow = ['A'];
+            let bRow = ['B'];
+            
+            for (let i = 0; i < binaryK.length; i++) {
+                headers.push(i);
+                let ki = parseInt(binaryK[i]);
+                
+                if (i > 0) A = (A * A) % n;
+                if (ki === 1) b = (b * A) % n;
+                
+                kiRow.push(ki);
+                aRow.push(A);
+                bRow.push(b);
+            }
+            
+            let tableHtml = `<h3>Quá trình tính C theo thuật toán a<sup>k</sup> mod n:</h3>`;
+            tableHtml += `<table><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+            tableHtml += `<tr>${kiRow.map(c => `<td>${c}</td>`).join('')}</tr>`;
+            tableHtml += `<tr>${aRow.map(c => `<td>${c}</td>`).join('')}</tr>`;
+            tableHtml += `<tr>${bRow.map(c => `<td>${c}</td>`).join('')}</tr>`;
+            tableHtml += `</table>`;
+            return tableHtml;
+        }
+
+        function decryptMessage() {
+            let n = parseInt(sessionStorage.getItem('rsa_n'));
+            let d = parseInt(sessionStorage.getItem('rsa_d'));
+            let encryptedValue = parseInt(document.getElementById('cipherText').innerText);
+            let original_m = parseInt(sessionStorage.getItem('rsa_m'));
+
+            if (isNaN(n) || isNaN(d) || isNaN(encryptedValue)) {
+                alert("Dữ liệu giải mã không hợp lệ!");
+                return;
+            }
+
+            let decryptedValue = modPow(encryptedValue, d, n);
+            let stepsHtml = generateModExpTable(encryptedValue, d, n);
+
+            let decryptSteps = `<h3>Các bước giải mã:</h3>`;
+            decryptSteps += `<p><strong>Bước 8:</strong> Giải mã m = C^d mod n = ${encryptedValue}^${d} mod ${n} = <strong>${decryptedValue}</strong>.</p>`;
+            decryptSteps += stepsHtml;
+
+            document.getElementById('decryptSteps').innerHTML = decryptSteps;
+            document.getElementById('decryptedText').innerText = decryptedValue;
+        }
+
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
     </script>
-    <script src="Code-TT/Euclide/script.js"></script>
-    <!-- Import thuật toán Euclide Mở Rộng -->
-
 </head>
 <body>
-    <h2>Mô phỏng thuật toán RSA</h2>
-    <h3>Bước 1: Nhập số nguyên tố p, q, e</h3>
-    <label for="p">p: </label><input type="number" id="p">
-    <label for="q">q: </label><input type="number" id="q">
-    <label for="e">e: </label><input type="number" id="e">
-    <button onclick="generateKeys()">Tạo khóa</button>
-
-    <div id="keySteps">
-
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#intro">Giới thiệu</a>
+        <a href="#application">Ứng Dụng</a>
+        <a href="#algorithm">Thuật Toán</a>
+        <a href="#calculation">Tính Toán</a>
     </div>
 
-    <div id="encryptSection" style="display: none;">
-        <h3>Bước 3: Nhập độ dài chuỗi để mã hóa</h3>
-        <label for="length">m: </label>
-        <input type="number" id="length">
-        <button onclick="encryptMessage()">Mã hóa</button>
+    <div id="main">
+        <span class="menu-btn" onclick="openNav()">&#9776; Menu</span>
+        
+        <div id="intro" class="content-section">
+            <h2>Giới thiệu</h2>
+            <p>Thuật toán RSA được đặt theo tên của Ron Rivest, Adi Shamir và Leonard Adleman.</p>
+            <p>RSA là mã khối chuyển đổi bản rõ thành bản mã và ngược lại ở phía người nhận.</p>
+            <p>RSA là mã công khai được biết đến nhiều nhất và sử dụng rộng rãi nhất hiện nay.</p>
+        </div>
 
-        <div id="encryptSteps"></div>
+        <div id="application" class="content-section">
+            <h2>Ứng Dụng</h2>
+            <p>RSA được sử dụng rộng rãi trong nhiều lĩnh vực bảo mật:</p>
+            <ul>
+                <li>Bảo mật truyền thông: Dùng trong HTTPS, SSL/TLS để mã hóa dữ liệu trên internet.</li>
+                <li>Chữ ký số: Đảm bảo tính toàn vẹn và xác thực tài liệu, email.</li>
+                <li>Xác thực người dùng: Dùng trong hệ thống đăng nhập an toàn.</li>
+                <li>Tiền mã hóa (Blockchain): Bảo vệ giao dịch và danh tính người dùng.</li>
+                <li>VPN & Mạng riêng ảo: Mã hóa dữ liệu khi truyền qua internet.</li>
+            </ul>
+        </div>
 
-        <p><strong>Bản mã:</strong> <span id="cipherText"></span></p>
+        <div id="algorithm" class="content-section">
+            <h2>Thuật Toán</h2>
+            <ol>
+                <li>Chọn hai số nguyên tố p và q trong đó p ≠ q.</li>
+                <li>Tính n = p * q.</li>
+                <li>Tính Ф(n) = (p-1) * (q-1).</li>
+                <li>Chọn e sao cho e nguyên tố cùng nhau với Ф(n), tức là gcd(e, Ф(n)) = 1 và 1 < e < Ф(n).</li>
+                <li>Tính d = e⁻¹ mod Ф(n) hoặc ed ≡ 1 mod Ф(n).</li>
+                <li>Khóa công khai = {e, n}, khóa riêng = {d, n}.</li>
+                <li>Tìm bản mã bằng công thức: C = P<sup>e</sup> mod n trong đó P < n (C = Bản mã hóa, P = Bản rõ).</li>
+                <li>Giải mã: P = C<sup>d</sup> mod n để lấy được bản rõ P.</li>
+            </ol>
+        </div>
 
-        <div id="decryptSection" style="display: none;">
-            <h3>Bước 4: Giải mã</h3>
+        <h1>Mô phỏng thuật toán RSA</h1>
+        
+        <div class="card" id="calculation">
+            <h2>Bước 1: Tạo khóa RSA</h2>
+            <div class="input-group">
+                <div class="input-item">
+                    <label for="p">Số nguyên tố p:</label>
+                    <input type="number" id="p" placeholder="Nhập số nguyên tố p">
+                </div>
+                <div class="input-item">
+                    <label for="q">Số nguyên tố q:</label>
+                    <input type="number" id="q" placeholder="Nhập số nguyên tố q">
+                </div>
+                <div class="input-item">
+                    <label for="e">Số e (khóa công khai):</label>
+                    <input type="number" id="e" placeholder="Nhập số e">
+                </div>
+            </div>
+            <button onclick="generateKeys()">Tạo khóa</button>
+            
+            <div id="keySteps" class="result"></div>
+        </div>
+
+        <div id="encryptSection" class="card hidden">
+            <h2>Bước 2: Mã hóa thông điệp</h2>
+            <div class="input-item">
+                <label for="length">Thông điệp m (số nguyên):</label>
+                <input type="number" id="length" placeholder="Nhập thông điệp m">
+            </div>
+            <button onclick="encryptMessage()">Mã hóa</button>
+            
+            <div id="encryptSteps" class="result"></div>
+            <div class="result">
+                <p><strong>Bản mã:</strong> <span id="cipherText"></span></p>
+            </div>
+        </div>
+
+        <div id="decryptSection" class="card hidden">
+            <h2>Bước 3: Giải mã thông điệp</h2>
             <button onclick="decryptMessage()">Giải mã</button>
-
-            <div id="decryptSteps"></div>
-
-            <p><strong>Kết quả:</strong> <span id="decryptedText"></span></p>
+            
+            <div id="decryptSteps" class="result"></div>
+            <div class="result">
+                <p><strong>Kết quả giải mã:</strong> <span id="decryptedText"></span></p>
+            </div>
         </div>
     </div>
 </body>

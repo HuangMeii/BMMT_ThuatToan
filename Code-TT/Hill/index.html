@@ -169,6 +169,12 @@
             background-color: #f9f9f9;
             border-radius: 4px;
         }
+        .pair-details {
+            margin-left: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -392,6 +398,70 @@
             return numToChar(c) + numToChar(d);
         }
 
+        // Hiển thị chi tiết quá trình mã hóa từng cặp ký tự
+        function showEncryptionDetails(keyMatrix, plaintextPairs) {
+            let detailsHTML = '<div class="process-step"><h4>Chi tiết mã hóa:</h4>';
+            
+            for (let i = 0; i < plaintextPairs.length; i++) {
+                const pair = plaintextPairs[i];
+                const p1 = charToNum(pair[0]);
+                const p2 = charToNum(pair[1]);
+                
+                // Tính toán kết quả
+                const c1 = (keyMatrix[0][0] * p1 + keyMatrix[0][1] * p2) % 26;
+                const c2 = (keyMatrix[1][0] * p1 + keyMatrix[1][1] * p2) % 26;
+                
+                // Đảm bảo kết quả là số dương
+                const c1_pos = c1 < 0 ? c1 + 26 : c1;
+                const c2_pos = c2 < 0 ? c2 + 26 : c2;
+                
+                detailsHTML += `
+                    <div class="pair-details">
+                        <p><strong>Cặp ${i+1}: ${pair} (${p1},${p2}) → ${numToChar(c1_pos)}${numToChar(c2_pos)} (${c1_pos},${c2_pos})</strong></p>
+                        <div class="matrix">
+[${keyMatrix[0][0]} ${keyMatrix[0][1]}]   [${p1}]   [${keyMatrix[0][0]}×${p1} + ${keyMatrix[0][1]}×${p2}]   [${c1}] (mod 26) = [${c1_pos}]
+[${keyMatrix[1][0]} ${keyMatrix[1][1]}] × [${p2}] = [${keyMatrix[1][0]}×${p1} + ${keyMatrix[1][1]}×${p2}] = [${c2}] (mod 26) = [${c2_pos}]
+                        </div>
+                    </div>
+                `;
+            }
+            
+            detailsHTML += '</div>';
+            return detailsHTML;
+        }
+
+        // Hiển thị chi tiết quá trình giải mã từng cặp ký tự
+        function showDecryptionDetails(inverseKeyMatrix, ciphertextPairs) {
+            let detailsHTML = '<div class="process-step"><h4>Chi tiết giải mã:</h4>';
+            
+            for (let i = 0; i < ciphertextPairs.length; i++) {
+                const pair = ciphertextPairs[i];
+                const c1 = charToNum(pair[0]);
+                const c2 = charToNum(pair[1]);
+                
+                // Tính toán kết quả
+                const p1 = (inverseKeyMatrix[0][0] * c1 + inverseKeyMatrix[0][1] * c2) % 26;
+                const p2 = (inverseKeyMatrix[1][0] * c1 + inverseKeyMatrix[1][1] * c2) % 26;
+                
+                // Đảm bảo kết quả là số dương
+                const p1_pos = p1 < 0 ? p1 + 26 : p1;
+                const p2_pos = p2 < 0 ? p2 + 26 : p2;
+                
+                detailsHTML += `
+                    <div class="pair-details">
+                        <p><strong>Cặp ${i+1}: ${pair} (${c1},${c2}) → ${numToChar(p1_pos)}${numToChar(p2_pos)} (${p1_pos},${p2_pos})</strong></p>
+                        <div class="matrix">
+[${inverseKeyMatrix[0][0]} ${inverseKeyMatrix[0][1]}]   [${c1}]   [${inverseKeyMatrix[0][0]}×${c1} + ${inverseKeyMatrix[0][1]}×${c2}]   [${p1}] (mod 26) = [${p1_pos}]
+[${inverseKeyMatrix[1][0]} ${inverseKeyMatrix[1][1]}] × [${c2}] = [${inverseKeyMatrix[1][0]}×${c1} + ${inverseKeyMatrix[1][1]}×${c2}] = [${p2}] (mod 26) = [${p2_pos}]
+                        </div>
+                    </div>
+                `;
+            }
+            
+            detailsHTML += '</div>';
+            return detailsHTML;
+        }
+
         // Xử lý toàn bộ văn bản
         function processText(text, matrix) {
             // Làm sạch và chuẩn hóa văn bản
@@ -433,7 +503,30 @@
                     throw new Error("Ma trận khóa không khả nghịch modulo 26");
                 }
                 
-                const ciphertext = processText(plaintext, keyMatrix);
+                // Làm sạch và chuẩn hóa văn bản
+                const cleanText = plaintext.toUpperCase().replace(/[^A-Z]/g, '');
+                if (cleanText.length === 0) {
+                    throw new Error("Văn bản không chứa ký tự chữ cái nào");
+                }
+                
+                // Thêm padding nếu độ dài lẻ
+                let paddedText = cleanText;
+                if (paddedText.length % 2 !== 0) {
+                    paddedText += paddedText[paddedText.length - 1];
+                }
+                
+                // Tạo các cặp ký tự để xử lý
+                const plaintextPairs = [];
+                for (let i = 0; i < paddedText.length; i += 2) {
+                    plaintextPairs.push(paddedText.substr(i, 2));
+                }
+                
+                // Mã hóa từng cặp
+                let ciphertext = '';
+                for (let i = 0; i < plaintextPairs.length; i++) {
+                    ciphertext += processPair(plaintextPairs[i], keyMatrix);
+                }
+                
                 document.getElementById('ciphertext').value = ciphertext;
                 
                 // Hiển thị thông tin chi tiết
@@ -447,7 +540,15 @@
     [${keyStr[2]}(${keyMatrix[1][0]}) ${keyStr[3]}(${keyMatrix[1][1]})]</div>
                         <p>Định thức = ${det}</p>
                         <p>Nghịch đảo định thức mod 26 = ${detInv}</p>
+                        <p>Văn bản gốc: ${plaintext}</p>
+                        ${cleanText.length % 2 !== 0 ? `<p>Văn bản sau khi thêm đệm: ${paddedText} (thêm '${paddedText[paddedText.length-1]}' ở cuối)</p>` : ''}
                     </div>
+                `;
+                
+                // Thêm chi tiết mã hóa từng cặp
+                processHTML += showEncryptionDetails(keyMatrix, plaintextPairs);
+                
+                processHTML += `
                     <div class="process-step">
                         <h4>Kết quả mã hóa:</h4>
                         <p>${ciphertext}</p>
@@ -456,7 +557,7 @@
                 
                 document.getElementById('processSteps').innerHTML = processHTML;
                 document.getElementById('status').innerHTML = 
-                    `<div class="success">Mã hóa thành công!</div>`;
+                    `<div class="success">Mã hóa thành công! Đã xử lý ${plaintextPairs.length} cặp ký tự.</div>`;
                 
             } catch (error) {
                 document.getElementById('status').innerHTML = 
@@ -488,7 +589,25 @@
                 }
                 
                 const inverseKeyMatrix = inverseMatrix(keyMatrix);
-                const plaintext = processText(ciphertext, inverseKeyMatrix);
+                
+                // Làm sạch và chuẩn hóa văn bản
+                const cleanText = ciphertext.toUpperCase().replace(/[^A-Z]/g, '');
+                if (cleanText.length === 0) {
+                    throw new Error("Bản mã không chứa ký tự chữ cái nào");
+                }
+                
+                // Tạo các cặp ký tự để xử lý
+                const ciphertextPairs = [];
+                for (let i = 0; i < cleanText.length; i += 2) {
+                    ciphertextPairs.push(cleanText.substr(i, 2));
+                }
+                
+                // Giải mã từng cặp
+                let plaintext = '';
+                for (let i = 0; i < ciphertextPairs.length; i++) {
+                    plaintext += processPair(ciphertextPairs[i], inverseKeyMatrix);
+                }
+                
                 document.getElementById('decryptedText').value = plaintext;
                 
                 // Hiển thị thông tin chi tiết
@@ -504,7 +623,14 @@
                         <p>Nghịch đảo định thức mod 26 = ${detInv}</p>
                         <div class="matrix">K⁻¹ = [${inverseKeyMatrix[0][0]} ${inverseKeyMatrix[0][1]}]
     [${inverseKeyMatrix[1][0]} ${inverseKeyMatrix[1][1]}]</div>
+                        <p>Bản mã: ${ciphertext}</p>
                     </div>
+                `;
+                
+                // Thêm chi tiết giải mã từng cặp
+                processHTML += showDecryptionDetails(inverseKeyMatrix, ciphertextPairs);
+                
+                processHTML += `
                     <div class="process-step">
                         <h4>Kết quả giải mã:</h4>
                         <p>${plaintext}</p>
@@ -513,7 +639,7 @@
                 
                 document.getElementById('processSteps').innerHTML = processHTML;
                 document.getElementById('status').innerHTML = 
-                    `<div class="success">Giải mã thành công!</div>`;
+                    `<div class="success">Giải mã thành công! Đã xử lý ${ciphertextPairs.length} cặp ký tự.</div>`;
                 
             } catch (error) {
                 document.getElementById('status').innerHTML = 
